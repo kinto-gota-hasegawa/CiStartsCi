@@ -1,0 +1,49 @@
+name: Create Draft PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-draft-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+      
+      - name: Create branch
+        run: |
+          # Generate a unique branch name with timestamp
+          BRANCH_NAME="increment-test-$(date +%Y%m%d%H%M%S)"
+          git checkout -b $BRANCH_NAME
+      
+      - name: Update test.txt value
+        run: |
+          # Read current value, increment by 1, and save
+          CURRENT_VALUE=$(cat test.txt)
+          NEW_VALUE=$((CURRENT_VALUE + 1))
+          echo $NEW_VALUE > test.txt
+          
+          # Show the change
+          echo "Updated test.txt from $CURRENT_VALUE to $NEW_VALUE"
+      
+      - name: Commit changes
+        run: |
+          git add test.txt
+          git commit -m "Increment test.txt value"
+          git push origin HEAD
+      
+      - name: Create Draft PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create a draft PR using gh CLI
+          gh pr create \
+            --title "Increment test.txt value" \
+            --body "This PR increments the value in test.txt by 1." \
+            --draft \
+            --base main

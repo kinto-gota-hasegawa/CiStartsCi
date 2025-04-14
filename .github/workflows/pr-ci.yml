@@ -1,0 +1,19 @@
+name: PR CI Workflow
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  echo-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Echo message
+        run: |
+          echo "Hello from PR CI Workflow\!"
+          echo "This workflow runs on PR events - opened, reopened, and synchronize"
+          echo "Current content of test.txt:"
+          cat test.txt
