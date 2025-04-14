@@ -3,9 +3,12 @@ name: Create Draft PR
 on:
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   create-draft-pr:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
