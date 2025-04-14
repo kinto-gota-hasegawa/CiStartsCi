@@ -50,3 +50,16 @@ jobs:
             --body "This PR increments the value in test.txt by 1." \
             --draft \
             --base main
+          
+          echo "PR created successfully"
+          
+      - name: Trigger PR CI Workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Wait a moment to ensure PR is registered
+          sleep 5
+          
+          # Explicitly trigger the PR-CI workflow using GitHub CLI
+          echo "Triggering PR CI workflow for the newly created PR"
+          gh workflow run pr-ci.yml -R ${GITHUB_REPOSITORY} --ref $(git branch --show-current)
