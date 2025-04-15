@@ -43,8 +43,18 @@ jobs:
       - name: Create Draft PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
         run: |
-          # Create a draft PR using gh CLI
+          PR_DESCRIPTION=$'This PR was automatically created by GitHub Actions to update string resources.'
+          CI_LINK="https://github.com/${REPO}/actions/runs/${RUN_ID}"
+
+          BODY=$(cat << EOF
+            This PR increments the value in test.txt by 1.
+            [View CI Run]('"${CI_LINK}"$
+            $PR_DESCRIPTION
+            EOF
+          )
           gh pr create \
             --title "Increment test.txt value" \
             --body "This PR increments the value in test.txt by 1." \
@@ -52,14 +62,3 @@ jobs:
             --base main
           
           echo "PR created successfully"
-          
-      - name: Trigger PR CI Workflow
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Wait a moment to ensure PR is registered
-          sleep 5
-          
-          # Explicitly trigger the PR-CI workflow using GitHub CLI
-          echo "Triggering PR CI workflow for the newly created PR"
-          gh workflow run pr-ci.yml -R ${GITHUB_REPOSITORY} --ref $(git branch --show-current)
