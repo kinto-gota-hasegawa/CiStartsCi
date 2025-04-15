@@ -49,11 +49,11 @@ jobs:
           PR_DESCRIPTION=$'This PR was automatically created by GitHub Actions to update string resources.'
           CI_LINK="https://github.com/${REPO}/actions/runs/${RUN_ID}"
 
-          BODY=$(cat << EOF
-            This PR increments the value in test.txt by 1.
-            [View CI Run]('"${CI_LINK}"$
-            $PR_DESCRIPTION
-            EOF
+          BODY=$(cat <<EOF
+          This PR increments the value in test.txt by 1.
+          🔗 [View CI Run](${CI_LINK})
+          $PR_DESCRIPTION
+          EOF
           )
           gh pr create \
             --title "Increment test.txt value" \
