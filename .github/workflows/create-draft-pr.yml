@@ -57,7 +57,7 @@ jobs:
           )
           gh pr create \
             --title "Increment test.txt value" \
-            --body "This PR increments the value in test.txt by 1." \
+            --body "$BODY" \
             --draft \
             --base main
           
